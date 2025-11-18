@@ -52,6 +52,10 @@ layout: null
     font-size: 0.85rem;
     color: #666;
   }
+
+  .figure-empty {
+    visibility: hidden;
+  }
 </style>
 
 # HLIP Ablation
@@ -60,11 +64,30 @@ layout: null
 In HLIP, we present a language–image pre-training framework designed for uncurated 3D medical data that incorporates a hierarchical attention mechanism. HLIP achieves state-of-the-art results on both curated and uncurated 3D medical datasets spanning brain MRI, head CT, and chest CT. We attribute these gains to the effective modeling, careful implementation, and scalability. Building on HLIP’s conclusions and implementation, we push scalability one step further for uncurated 3D medical data. **To this end, we conduct five ablation studies that appear not to improve performance yet are crucial for scalability and for advancing vision–language modeling, including visual instruction tuning.** This yields a new HLIP model trained on the combined BrainMRI220K and HeadCT240K datasets. **We further introduce a simple yet effective adjustment to the language supervision, resulting in an updated HLIP model.**
 
 
-## Experimental Setup
+## Experimental setup
 While HLIP uses the external Pub-Brain-5 dataset to ablate different model designs, this dataset contains only five classes (normal, stroke, glioma, meningioma, metastasis), which is not sufficiently comprehensive to assess model capacity. The same limitation applies to the external RSNA dataset. **In the following experiments, we instead evaluate on our perspective dataset, which contains 23K studies covering 74 diagnoses for brain MRI and approximately 15K studies covering 83 diagnoses for head CT.** Moreover, the linear-probe protocol can introduce additional bias during evaluation. **Therefore, we instead use a zero-shot evaluation protocol, averaging over multiple prompts for stability.**
 
+<div class="figure-row">
+  <div class="figure">
+    <img src="images/ct.png" alt="ct">
+    <div class="figure-caption">reimplementation on headct240K</div>
+  </div>
 
-## Pooling strategy & Patch size & Sequence position embedding
+  <div class="figure">
+    <img src="images/mri.png" alt="mri">
+    <div class="figure-caption">reimplementation on brainmri220K</div>
+  </div>
+
+  <div class="figure figure-empty">
+    <img src="images/ct.png" alt="">
+    <div class="figure-caption">&nbsp;</div>
+  </div>
+</div>
+
+We first reimplement the HLIP model on the HeadCT240K and BrainMRI220K datasets, respectively.
+
+
+## Pooling strategy, Patch size, Sequence position embedding
 
 <div class="figure-row">
   <div class="figure">
@@ -74,20 +97,62 @@ While HLIP uses the external Pub-Brain-5 dataset to ablate different model desig
 
   <div class="figure">
     <img src="images/2 mri patch size (8,16,16 -> 6,16,16).png" alt="(8,16,16) → (6,16,16)">
-    <div class="figure-caption">(8, 16, 16) → (6, 16, 16)</div>
+    <div class="figure-caption">patch size (8, 16, 16) → (6, 16, 16)</div>
   </div>
 
   <div class="figure">
     <img src="images/5 mri seqposemb (with -> without).png" alt="w/ vs w/o sequence pos emb">
-    <div class="figure-caption">w/ sequence position emb → w/o sequence position emb</div>
+    <div class="figure-caption">w/ sequence position emb → w/o</div>
   </div>
 </div>
 
 All three experiments are conducted on the BrainMRI220K dataset.
 - Advancing vision–language modeling, such as visual instruction tuning, may require visual tokens extracted from a frozen vision encoder. However, because HLIP uses a CLS-token pooling strategy, the visual tokens in the final layer do not receive gradients during pre-training. One could instead use the visual tokens from the second-to-last layer, but this is undesirable because the final layer of HLIP performs study-level attention. Here, we instead ablate the pooling strategy proposed by DINO.TXT, which concatenates the CLS token with the average-pooled visual token. Although this does not improve performance in our setting, we retain this design because it can benefit downstream visual instruction tuning.
-- 
+- Smaller patch sizes have been widely shown to benefit many perception tasks. Here, we find that HLIP also benefits from smaller patch sizes.
+- We find that the sequence position embedding is not necessary, likely because HLIP first applies scan-level attention, which is sufficient for the model to distinguish between different scans. Moreover, removing the sequence position embedding also makes the overall architecture more compatible with advanced positional embedding strategies, such as rotary position embedding, which we discuss later.
 
 
+## Patch dropout, Number of scans per study
+
+<div class="figure-row">
+  <div class="figure">
+    <img src="images/3 mri patch dropout (0.25 -> 0.50).png" alt="patch dropout 0.25 → 0.50">
+    <div class="figure-caption">patch dropout 0.25 → 0.50</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/4 mri patch dropout (0.50 -> 0.75).png" alt="patch dropout 0.50 → 0.75">
+    <div class="figure-caption">patch dropout 0.50 → 0.75</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/6 mri scans (10 -> 8).png" alt="10 scans → 8 scans">
+    <div class="figure-caption">10 scans → 8 scans</div>
+  </div>
+</div>
+
+All three experiments are conducted on the BrainMRI220K dataset.
+- HLIP already uses a 0.25 patch dropout rate, primarily for acceleration and regularization. Here, we further explore this factor to enable larger batch sizes under fixed computational resources. We find that a 0.5 patch dropout rate still offers a favorable precision–batch-size trade-off when batch size is 384, whereas a 0.75 rate does not when batch size is 512. Therefore, we adopt a 0.5 patch dropout rate in subsequent experiments.
+- We also find that reducing the number of scans per study during training from ten to eight does not affect performance, while it accelerates the training process and alleviates memory consumption.
 
 
+## Pushing scalability one step further
 
+<div class="figure-row">
+  <div class="figure">
+    <img src="images/ct&mri vs ct.png" alt="ct&mri vs ct">
+    <div class="figure-caption">ct&mri ct</div>
+  </div>
+  
+  <div class="figure">
+    <img src="images/ct&mri vs mri.png" alt="ct&mri vs mri">
+    <div class="figure-caption">ct&mri vs mri</div>
+  </div>
+
+  <div class="figure figure-empty">
+    <img src="images/ct" alt="">
+    <div class="figure-caption">&nbsp;</div>
+  </div>
+</div>
+
+Keeping all five subtle but meaningful changes, we train HLIP on the combined BrainMRI220K and HeadCT240K datasets. Using a batch size of 768 achieved through a gradient-accumulation step of 2, the training process takes approximately two days on eight L40 GPUs.
