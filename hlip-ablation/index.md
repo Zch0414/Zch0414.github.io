@@ -56,6 +56,15 @@ layout: null
   .figure-empty {
     visibility: hidden;
   }
+
+  table, th, td {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 4px 8px;
+  }
 </style>
 
 # HLIP Ablation
@@ -243,6 +252,7 @@ We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the 
   </div>
 </div>
 
+Here, we report a phenomenon observed when supervising with LLM-summarized reports. Although GPT-4omini and GPT-4.1mini are more advanced models than GPT-3.5, we find that supervising on reports summarized by these two models can lead to a significant decrease in zero-shot performance.
 
 <div class="figure-row">
   <div class="figure">
@@ -260,3 +270,35 @@ We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the 
     <div class="figure-caption">sentence dropout (gpt4omini mri)</div>
   </div>
 </div>
+
+However, we find that with sentence dropout, this issue can be largely alleviated.
+
+
+## Unsuccessful attempts
+
+<div class="figure-row">
+  <div class="figure">
+    <img src="images/fail mri initialization (avg -> central).png" alt="ct report 4o mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4omini (ct)</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/fail mri patch size (8,16,16 -> 8,14,14).png" alt="ct report 4.1 mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (ct)</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/fail ct&mri rope (ct).png" alt="mri report 4o mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4omini (mri)</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/fail ct&mri rope (mri).png" alt="mri report 4.1 mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (mri)</div>
+  </div>
+</div>
+
+At the end of this blog, we introduce four designs that we find do not provide benefits in our setting.
+- Although central-inflation initialization has been shown to perform better for video ViTs, we find that average-inflation initialization performs better in our setting.
+- We find that using smaller patch sizes along the x and y axes does not improve performance.
+- We implement a rotary position embedding following V-JEPA 2. However, we do not observe clear benefits. We hypothesize that rotary position embeddings may be more beneficial for larger models.
