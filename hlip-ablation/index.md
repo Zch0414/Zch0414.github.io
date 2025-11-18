@@ -73,14 +73,14 @@ While HLIP uses the external Pub-Brain-5 dataset to ablate different model desig
     <div class="figure-caption">reimplementation on headct240K</div>
   </div>
 
-  <div class="figure">
-    <img src="images/mri.png" alt="mri">
-    <div class="figure-caption">reimplementation on brainmri220K</div>
-  </div>
-
   <div class="figure figure-empty">
     <img src="images/ct.png" alt="">
     <div class="figure-caption">&nbsp;</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/mri.png" alt="mri">
+    <div class="figure-caption">reimplementation on brainmri220K</div>
   </div>
 </div>
 
@@ -92,17 +92,17 @@ We first reimplement the HLIP model on the HeadCT240K and BrainMRI220K datasets,
 <div class="figure-row">
   <div class="figure">
     <img src="images/1 mri pool (cls -> dino.txt).png" alt="cls token → dino.txt">
-    <div class="figure-caption">cls token → dino.txt</div>
+    <div class="figure-caption">cls token → dino.txt (solid)</div>
   </div>
 
   <div class="figure">
     <img src="images/2 mri patch size (8,16,16 -> 6,16,16).png" alt="(8,16,16) → (6,16,16)">
-    <div class="figure-caption">patch size (8, 16, 16) → (6, 16, 16)</div>
+    <div class="figure-caption">patch size [8, 16, 16] → [6, 16, 16] (solid)</div>
   </div>
 
   <div class="figure">
     <img src="images/5 mri seqposemb (with -> without).png" alt="w/ vs w/o sequence pos emb">
-    <div class="figure-caption">w/ sequence position emb → w/o</div>
+    <div class="figure-caption">w/ sequence position emb → w/o (solid)</div>
   </div>
 </div>
 
@@ -117,17 +117,17 @@ All three experiments are conducted on the BrainMRI220K dataset.
 <div class="figure-row">
   <div class="figure">
     <img src="images/3 mri patch dropout (0.25 -> 0.50).png" alt="patch dropout 0.25 → 0.50">
-    <div class="figure-caption">patch dropout 0.25 → 0.50</div>
+    <div class="figure-caption">patch dropout 0.25 → 0.50 (solid)</div>
   </div>
 
   <div class="figure">
     <img src="images/4 mri patch dropout (0.50 -> 0.75).png" alt="patch dropout 0.50 → 0.75">
-    <div class="figure-caption">patch dropout 0.50 → 0.75</div>
+    <div class="figure-caption">patch dropout 0.50 → 0.75 (solid)</div>
   </div>
 
   <div class="figure">
     <img src="images/6 mri scans (10 -> 8).png" alt="10 scans → 8 scans">
-    <div class="figure-caption">10 scans → 8 scans</div>
+    <div class="figure-caption">10 scans → 8 scans (solid)</div>
   </div>
 </div>
 
@@ -143,16 +143,60 @@ All three experiments are conducted on the BrainMRI220K dataset.
     <img src="images/ct&mri vs ct.png" alt="ct&mri vs ct">
     <div class="figure-caption">ct&mri ct</div>
   </div>
-  
-  <div class="figure">
-    <img src="images/ct&mri vs mri.png" alt="ct&mri vs mri">
-    <div class="figure-caption">ct&mri vs mri</div>
-  </div>
 
   <div class="figure figure-empty">
     <img src="images/ct" alt="">
     <div class="figure-caption">&nbsp;</div>
   </div>
+
+  <div class="figure">
+    <img src="images/ct&mri vs mri.png" alt="ct&mri vs mri">
+    <div class="figure-caption">ct&mri vs mri</div>
+  </div>
 </div>
 
-Keeping all five subtle but meaningful changes, we train HLIP on the combined BrainMRI220K and HeadCT240K datasets. Using a batch size of 768 achieved through a gradient-accumulation step of 2, the training process takes approximately two days on eight L40 GPUs.
+Keeping all five subtle but meaningful changes, we train HLIP on the combined BrainMRI220K and HeadCT240K datasets. Using a batch size of 768 achieved through a gradient-accumulation step of 2, the training process takes approximately two days on eight L40 GPUs. Combining these two datasets yields a significant advantage for head CT.
+
+
+## Sentence dropout
+
+<div class="figure-row">
+  <div class="figure">
+    <img src="images/ct&mri sentence dropout (ct).png" alt="sentence dropout ct">
+    <div class="figure-caption">sentence dropout (ct)</div>
+  </div>
+  
+  <div class="figure figure-empty">
+    <img src="images/ct" alt="">
+    <div class="figure-caption">&nbsp;</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/ct&mri sentence dropout (mri).png" alt="sentence dropout mri">
+    <div class="figure-caption">sentence dropout (mri)</div>
+  </div>
+</div>
+
+Image captions used in the original CLIP are very short, whereas radiology reports are much longer, even when using an LLM-generated summary or the impression section. Intuitively, we randomly select a single sentence at each training step during language–image pre-training. We find that this simple adjustment yields a significant improvement. We hypothesize that this improvement arises from the limited representational capacity of the language model and from the distribution shift between training (long text) and zero-shot evaluation (short prompt).
+
+
+## Umasked fine-tuning
+
+<div class="figure-row">
+  <div class="figure">
+    <img src="images/ct&mri unmasked finetune (ct).png" alt="unmasked finetune ct">
+    <div class="figure-caption">unmasked finetune (ct)</div>
+  </div>
+  
+  <div class="figure figure-empty">
+    <img src="images/ct" alt="">
+    <div class="figure-caption">&nbsp;</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/ct&mri unmasked finetune (mri).png" alt="unmasked finetune mri">
+    <div class="figure-caption">unmasked finetune (mri)</div>
+  </div>
+</div>
+
+We further perform unmasked fine-tuning, maintaining the same batch size of 768 by increasing the gradient-accumulation steps to 6. Unmasked fine-tuning further improves performance. This yields our updated HLIP model.
