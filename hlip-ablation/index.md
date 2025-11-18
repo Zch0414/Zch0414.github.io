@@ -210,7 +210,7 @@ We further perform unmasked fine-tuning, maintaining the same batch size of 768 
 | **HLIP-2025-10-08**             | 94.8   | 94.8   | 86.0       | 86.2       | 90.5     |
 
 
-| Model               | Intraparenchymal | Intraventricular  | Subarachnoid | Subdural | Any  | **Mean** |
+| RSNA (Full Set)     | Intraparenchymal | Intraventricular  | Subarachnoid | Subdural | Any  | **Mean** |
 |---------------------|------------------|-------------------|--------------|----------|------|----------|
 | **HLIP**            | 88.2             | 91.4              | 84.1         | 83.4     | 81.5 | 85.7     |
 | **HLIP-2025-10-08** | 93.5             | 96.4              | 90.2         | 89.1     | 90.8 | 92.0     |
@@ -223,6 +223,16 @@ We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the 
 
 <div class="figure-row">
   <div class="figure">
+    <img src="images/ct report (gpt3.5turbo -> gpt4omini).png" alt="ct report 4o mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4omini (ct)</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/ct report (gpt3.5turbo -> gpt4.1mini).png" alt="ct report 4.1 mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (ct)</div>
+  </div>
+
+  <div class="figure">
     <img src="images/mri report (gpt3.5turbo -> gpt4omini).png" alt="mri report 4o mini">
     <div class="figure-caption">gpt3.5turbo vs gpt4omini (mri)</div>
   </div>
@@ -231,14 +241,22 @@ We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the 
     <img src="images/mri report (gpt3.5turbo -> gpt4.1mini).png" alt="mri report 4.1 mini">
     <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (mri)</div>
   </div>
-  
+</div>
+
+
+<div class="figure-row">
   <div class="figure">
-    <img src="images/ct report (gpt3.5turbo -> gpt4omini).png" alt="ct report 4o mini">
-    <div class="figure-caption">gpt3.5turbo vs gpt4omini (ct)</div>
+    <img src="images/ct&mri sentence dropout report (gpt3.5turbo -> gpt4omini) (ct).png" alt="ct sentence dropout report 4o mini">
+    <div class="figure-caption">sentence dropout (gpt4omini ct)</div>
+  </div>
+
+  <div class="figure figure-empty">
+    <img src="images/ct" alt="">
+    <div class="figure-caption">&nbsp;</div>
   </div>
 
   <div class="figure">
-    <img src="images/ct report (gpt3.5turbo -> gpt4.1mini).png" alt="ct report 4.1 mini">
-    <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (ct)</div>
+    <img src="images/ct&mri sentence dropout report (gpt3.5turbo -> gpt4omini) (mri).png" alt="mri sentence dropout report 4o mini">
+    <div class="figure-caption">sentence dropout (gpt4omini mri)</div>
   </div>
 </div>
