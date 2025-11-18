@@ -216,4 +216,29 @@ We further perform unmasked fine-tuning, maintaining the same batch size of 768 
 | **HLIP-2025-10-08** | 93.5             | 96.4              | 90.2         | 89.1     | 90.8 | 92.0     |
 
 
-We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the full RSNA dataset, demonstrating superior performance compared with the HLIP model in the original paper.
+We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the full RSNA dataset, demonstrating superior performance compared with the HLIP model in the original paper. Note that these experiments are conducted under the zero-shot setting.
+
+
+## Supervised by LLM-summarized report
+
+<div class="figure-row">
+  <div class="figure">
+    <img src="images/mri report (gpt3.5turbo -> gpt4omini).png" alt="mri report 4o mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4omini (mri)</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/mri report (gpt3.5turbo -> gpt4.1mini).png" alt="mri report 4.1 mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (mri)</div>
+  </div>
+  
+  <div class="figure">
+    <img src="images/ct report (gpt3.5turbo -> gpt4omini).png" alt="ct report 4o mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4omini (ct)</div>
+  </div>
+
+  <div class="figure">
+    <img src="images/ct report (gpt3.5turbo -> gpt4.1mini).png" alt="ct report 4.1 mini">
+    <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (ct)</div>
+  </div>
+</div>
