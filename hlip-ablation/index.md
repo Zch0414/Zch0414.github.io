@@ -78,10 +78,14 @@ While HLIP uses the external Pub-Brain-5 dataset to ablate different model desig
   </div>
 
   <div class="figure">
-    <img src="images/5 mri seqposemb (w -> w:o).png" alt="w/ vs w/o sequence pos emb">
+    <img src="images/5 mri seqposemb (with -> without).png" alt="w/ vs w/o sequence pos emb">
     <div class="figure-caption">w/ sequence position emb → w/o sequence position emb</div>
   </div>
 </div>
+
+All three experiments are conducted on the BrainMRI220K dataset.
+- Advancing vision–language modeling, such as visual instruction tuning, may require visual tokens extracted from a frozen vision encoder. However, because HLIP uses a CLS-token pooling strategy, the visual tokens in the final layer do not receive gradients during pre-training. One could instead use the visual tokens from the second-to-last layer, but this is undesirable because the final layer of HLIP performs study-level attention. Here, we instead ablate the pooling strategy proposed by DINO.TXT, which concatenates the CLS token with the average-pooled visual token. Although this does not improve performance in our setting, we retain this design because it can benefit downstream visual instruction tuning.
+- 
 
 
 
