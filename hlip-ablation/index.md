@@ -279,27 +279,27 @@ However, we find that with sentence dropout, this issue can be largely alleviate
 
 <div class="figure-row">
   <div class="figure">
-    <img src="images/fail mri initialization (avg -> central).png" alt="ct report 4o mini">
-    <div class="figure-caption">gpt3.5turbo vs gpt4omini (ct)</div>
+    <img src="images/fail mri initialization (avg -> central).png" alt="initialization">
+    <div class="figure-caption">patch embedding initialization (average → central)</div>
   </div>
 
   <div class="figure">
-    <img src="images/fail mri patch size (8,16,16 -> 8,14,14).png" alt="ct report 4.1 mini">
-    <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (ct)</div>
+    <img src="images/fail mri patch size (8,16,16 -> 8,14,14).png" alt="smaller patch size">
+    <div class="figure-caption">patch size [8, 16, 16] → [8, 14, 14]</div>
   </div>
 
   <div class="figure">
-    <img src="images/fail ct&mri rope (ct).png" alt="mri report 4o mini">
-    <div class="figure-caption">gpt3.5turbo vs gpt4omini (mri)</div>
+    <img src="images/fail ct&mri rope (ct).png" alt="rope ct">
+    <div class="figure-caption">rotary position embedding (solid ct)</div>
   </div>
 
   <div class="figure">
-    <img src="images/fail ct&mri rope (mri).png" alt="mri report 4.1 mini">
-    <div class="figure-caption">gpt3.5turbo vs gpt4.1mini (mri)</div>
+    <img src="images/fail ct&mri rope (mri).png" alt="rope mri">
+    <div class="figure-caption">rotary position embedding (solid mri)</div>
   </div>
 </div>
 
 At the end of this blog, we introduce four designs that we find do not provide benefits in our setting.
-- Although central-inflation initialization has been shown to perform better for video ViTs, we find that average-inflation initialization performs better in our setting.
+- For the patch embedding layer, while central-inflation initialization has been shown to perform better for video ViTs, we find that average-inflation initialization performs better in our setting.
 - We find that using smaller patch sizes along the x and y axes does not improve performance.
 - We implement a rotary position embedding following V-JEPA 2. However, we do not observe clear benefits. We hypothesize that rotary position embeddings may be more beneficial for larger models.
