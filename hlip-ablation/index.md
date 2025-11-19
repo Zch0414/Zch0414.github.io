@@ -218,7 +218,6 @@ We further perform unmasked fine-tuning, maintaining the same batch size of 768 
 | **HLIP**                        | 91.5   | 89.2   | 79.2       | 78.1       | 84.5     |
 | **HLIP-2025-10-08**             | 94.8   | 94.8   | 86.0       | 86.2       | 90.5     |
 
-<br>
 
 | RSNA (Full Set)     | Intraparenchymal | Intraventricular  | Subarachnoid | Subdural | Any  | **Mean** |
 |---------------------|------------------|-------------------|--------------|----------|------|----------|
