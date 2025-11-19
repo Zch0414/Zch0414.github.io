@@ -289,12 +289,12 @@ However, we find that with sentence dropout, this issue can be largely alleviate
 
   <div class="figure">
     <img src="images/fail ct&mri rope (ct).png" alt="rope ct">
-    <div class="figure-caption">rotary position embedding (solid ct)</div>
+    <div class="figure-caption">rotary position embedding (ct)</div>
   </div>
 
   <div class="figure">
     <img src="images/fail ct&mri rope (mri).png" alt="rope mri">
-    <div class="figure-caption">rotary position embedding (solid mri)</div>
+    <div class="figure-caption">rotary position embedding (mri)</div>
   </div>
 </div>
 
