@@ -82,14 +82,14 @@ While HLIP uses the external Pub-Brain-5 dataset to ablate different model desig
     <div class="figure-caption">reimplementation on headct240K</div>
   </div>
 
-  <div class="figure figure-empty">
-    <img src="images/ct.png" alt="">
-    <div class="figure-caption">&nbsp;</div>
-  </div>
-
   <div class="figure">
     <img src="images/mri.png" alt="mri">
     <div class="figure-caption">reimplementation on brainmri220K</div>
+  </div>
+
+  <div class="figure figure-empty">
+    <img src="images/ct.png" alt="">
+    <div class="figure-caption">&nbsp;</div>
   </div>
 </div>
 
@@ -153,14 +153,14 @@ All three experiments are conducted on the BrainMRI220K dataset.
     <div class="figure-caption">ct&mri ct</div>
   </div>
 
-  <div class="figure figure-empty">
-    <img src="images/ct" alt="">
-    <div class="figure-caption">&nbsp;</div>
-  </div>
-
   <div class="figure">
     <img src="images/ct&mri vs mri.png" alt="ct&mri vs mri">
     <div class="figure-caption">ct&mri vs mri</div>
+  </div>
+
+  <div class="figure figure-empty">
+    <img src="images/ct" alt="">
+    <div class="figure-caption">&nbsp;</div>
   </div>
 </div>
 
@@ -174,15 +174,15 @@ Keeping all five subtle but meaningful changes, we train HLIP on the combined Br
     <img src="images/ct&mri sentence dropout (ct).png" alt="sentence dropout ct">
     <div class="figure-caption">sentence dropout (ct)</div>
   </div>
-  
-  <div class="figure figure-empty">
-    <img src="images/ct" alt="">
-    <div class="figure-caption">&nbsp;</div>
-  </div>
 
   <div class="figure">
     <img src="images/ct&mri sentence dropout (mri).png" alt="sentence dropout mri">
     <div class="figure-caption">sentence dropout (mri)</div>
+  </div>
+
+  <div class="figure figure-empty">
+    <img src="images/ct" alt="">
+    <div class="figure-caption">&nbsp;</div>
   </div>
 </div>
 
@@ -196,15 +196,15 @@ Image captions used in the original CLIP are very short, whereas radiology repor
     <img src="images/ct&mri unmasked finetune (ct).png" alt="unmasked finetune ct">
     <div class="figure-caption">unmasked finetune (ct)</div>
   </div>
-  
-  <div class="figure figure-empty">
-    <img src="images/ct" alt="">
-    <div class="figure-caption">&nbsp;</div>
-  </div>
 
   <div class="figure">
     <img src="images/ct&mri unmasked finetune (mri).png" alt="unmasked finetune mri">
     <div class="figure-caption">unmasked finetune (mri)</div>
+  </div>
+
+  <div class="figure figure-empty">
+    <img src="images/ct" alt="">
+    <div class="figure-caption">&nbsp;</div>
   </div>
 </div>
 
@@ -218,6 +218,7 @@ We further perform unmasked fine-tuning, maintaining the same batch size of 768 
 | **HLIP**                        | 91.5   | 89.2   | 79.2       | 78.1       | 84.5     |
 | **HLIP-2025-10-08**             | 94.8   | 94.8   | 86.0       | 86.2       | 90.5     |
 
+<br>
 
 | RSNA (Full Set)     | Intraparenchymal | Intraventricular  | Subarachnoid | Subdural | Any  | **Mean** |
 |---------------------|------------------|-------------------|--------------|----------|------|----------|
@@ -260,14 +261,14 @@ Here, we report a phenomenon observed when supervising with LLM-summarized repor
     <div class="figure-caption">sentence dropout (gpt4omini ct)</div>
   </div>
 
-  <div class="figure figure-empty">
-    <img src="images/ct" alt="">
-    <div class="figure-caption">&nbsp;</div>
-  </div>
-
   <div class="figure">
     <img src="images/ct&mri sentence dropout report (gpt3.5turbo -> gpt4omini) (mri).png" alt="mri sentence dropout report 4o mini">
     <div class="figure-caption">sentence dropout (gpt4omini mri)</div>
+  </div>
+
+  <div class="figure figure-empty">
+    <img src="images/ct" alt="">
+    <div class="figure-caption">&nbsp;</div>
   </div>
 </div>
 
