@@ -213,17 +213,19 @@ We further perform unmasked fine-tuning, maintaining the same batch size of 768 
 
 ## External evaluation
 
-| Pub-Brain-5 (Anomaly Detection) | Stroke | Glioma | Meningioma | Metastasis | **Mean** |
+Pub-Brain-5 (Anomaly Detection)
+
+|  | Stroke | Glioma | Meningioma | Metastasis | Mean |
 |:---------------------------------:|:--------:|:--------:|:------------:|:------------:|:----------:|
 | **HLIP**                        | 91.5   | 89.2   | 79.2       | 78.1       | 84.5     |
 | **HLIP-2025-10-08**             | 94.8   | 94.8   | 86.0       | 86.2       | 90.5     |
- 
- 
-| RSNA (Full Set)     | Intraparenchymal | Intraventricular  | Subarachnoid | Subdural | Any  | **Mean** |
+
+RSNA (Full Set)
+
+|      | Intraparenchymal | Intraventricular  | Subarachnoid | Subdural | Any  | Mean |
 |:---------------------:|:------------------:|:-------------------:|:--------------:|:----------:|:------:|:----------:|
 | **HLIP**            | 88.2             | 91.4              | 84.1         | 83.4     | 81.5 | 85.7     |
 | **HLIP-2025-10-08** | 93.5             | 96.4              | 90.2         | 89.1     | 90.8 | 92.0     |
-
 
 We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the full RSNA dataset, demonstrating superior performance compared with the HLIP model in the original paper. Note that these experiments are conducted under the zero-shot setting.
 
