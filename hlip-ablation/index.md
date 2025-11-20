@@ -70,11 +70,13 @@ layout: null
 # HLIP Ablation
 2025-11-17 · Chenhui Zhao
 
-In HLIP, we present a language–image pre-training framework designed for uncurated 3D medical data that incorporates a hierarchical attention mechanism. HLIP achieves state-of-the-art results on both curated and uncurated 3D medical datasets spanning brain MRI, head CT, and chest CT. We attribute these gains to the effective modeling, careful implementation, and scalability. Building on HLIP’s conclusions and implementation, we push scalability one step further for uncurated 3D medical data. **To this end, we conduct five ablation studies that appear not to improve performance yet are crucial for scalability and for advancing vision–language modeling, including visual instruction tuning.** This yields a new HLIP model trained on the combined BrainMRI220K and HeadCT240K datasets. **We further introduce a simple yet effective adjustment to the language supervision, resulting in an updated HLIP model.**
+In [HLIP](https://arxiv.org/abs/2505.21862), we present a language–image pre-training framework designed for uncurated 3D medical data that incorporates a hierarchical attention mechanism. HLIP achieves state-of-the-art results on both curated and uncurated 3D medical datasets spanning brain MRI, head CT, and chest CT. We attribute these gains to the effective modeling, careful implementation, and scalability. In this blog, building on HLIP’s conclusions and implementation, we push scalability one step further for uncurated 3D medical data. To this end, **we conduct five ablation studies that appear not to improve performance yet are crucial for scalability and for advancing vision–language modeling, including visual instruction tuning.** This yields a new HLIP model trained on the combined BrainMRI220K and HeadCT240K datasets. We further introduce a **simple yet effective adjustment to the language supervision, resulting in an updated HLIP model.**
+
+The code [![github repo](https://img.shields.io/badge/github-repo-blue?logo=github)](https://github.com/Zch0414/hlip/tree/hlip-ablation) and model [![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-yellow)](https://huggingface.co/Zch0414/hlip-2025-10-08) presented in this blog have been published.
 
 
 ## Experimental setup
-While HLIP uses the external Pub-Brain-5 dataset to ablate different model designs, this dataset contains only five classes (normal, stroke, glioma, meningioma, metastasis), which is not sufficiently comprehensive to assess model capacity. The same limitation applies to the external RSNA dataset. **In the following experiments, we instead evaluate on our perspective dataset, which contains 23K studies covering 74 diagnoses for brain MRI and approximately 15K studies covering 83 diagnoses for head CT.** Moreover, the linear-probe protocol can introduce additional bias during evaluation. **Therefore, we instead use a zero-shot evaluation protocol, averaging over multiple prompts for stability.**
+While HLIP uses the external Pub-Brain-5 dataset to ablate different model designs, this dataset contains only five classes (normal, stroke, glioma, meningioma, metastasis), which is not sufficiently comprehensive to assess model capacity. The same limitation applies to the external RSNA dataset. In the following experiments, **we instead evaluate on our perspective dataset, which contains 23K studies covering 74 diagnoses for brain MRI and approximately 15K studies covering 83 diagnoses for head CT.** Moreover, the linear-probe protocol can introduce additional bias during evaluation. Therefore, **we instead use a zero-shot evaluation protocol, averaging over multiple prompts for stability (similar to the implementation in [open-clip](https://github.com/mlfoundations/open_clip/blob/main/src/open_clip/zero_shot_metadata.py)).** Although the evaluation set is not publicly available, we hope that the conclusions drawn from these comprehensive evaluations can facilitate future work for the community.
 
 <div class="figure-row">
   <div class="figure">
@@ -116,7 +118,7 @@ We first reimplement the HLIP model on the HeadCT240K and BrainMRI220K datasets,
 </div>
 
 All three experiments are conducted on the BrainMRI220K dataset.
-- Advancing vision–language modeling, such as visual instruction tuning, may require visual tokens extracted from a frozen vision encoder. However, because HLIP uses a CLS-token pooling strategy, the visual tokens in the final layer do not receive gradients during pre-training. One could instead use the visual tokens from the second-to-last layer, but this is undesirable because the final layer of HLIP performs study-level attention. Here, we instead ablate the pooling strategy proposed by DINO.TXT, which concatenates the CLS token with the average-pooled visual token. Although this does not improve performance in our setting, we retain this design because it can benefit downstream visual instruction tuning.
+- Advancing vision–language modeling, such as visual instruction tuning, may require visual tokens extracted from a frozen vision encoder. However, because HLIP uses a CLS-token pooling strategy, the visual tokens in the final layer do not receive gradients during pre-training. One could instead use the visual tokens from the second-to-last layer, but this is undesirable because the final layer of HLIP performs study-level attention. Here, we instead ablate the pooling strategy proposed by [DINO.TXT](https://arxiv.org/abs/2412.16334v1), which concatenates the CLS token with the average-pooled visual token. Although this does not improve performance in our setting, we retain this design because it can benefit downstream tasks like segmentation and visual instruction tuning.
 - Smaller patch sizes have been widely shown to benefit many perception tasks. Here, we find that HLIP also benefits from smaller patch sizes.
 - We find that the sequence position embedding is not necessary, likely because HLIP first applies scan-level attention, which is sufficient for the model to distinguish between different scans. Moreover, removing the sequence position embedding also makes the overall architecture more compatible with advanced positional embedding strategies, such as rotary position embedding, which we discuss later.
 
@@ -213,21 +215,21 @@ We further perform unmasked fine-tuning, maintaining the same batch size of 768 
 
 ## External evaluation
 
-Pub-Brain-5 (Anomaly Detection)
+**Pub-Brain-5 (Anomaly Detection)**
 
 |  | Stroke | Glioma | Meningioma | Metastasis | Mean |
 |:---------------------------------:|:--------:|:--------:|:------------:|:------------:|:----------:|
 | **HLIP**                        | 91.5   | 89.2   | 79.2       | 78.1       | 84.5     |
-| **HLIP-2025-10-08**             | 94.8   | 94.8   | 86.0       | 86.2       | 90.5     |
+| **HLIP-2025-10-08**             | 94.8   | 94.8   | 86.0       | 86.2       | **90.5**     |
 
-RSNA (Full Set)
+**RSNA (Full Set)**
 
 |      | Intraparenchymal | Intraventricular  | Subarachnoid | Subdural | Any  | Mean |
 |:---------------------:|:------------------:|:-------------------:|:--------------:|:----------:|:------:|:----------:|
 | **HLIP**            | 88.2             | 91.4              | 84.1         | 83.4     | 81.5 | 85.7     |
-| **HLIP-2025-10-08** | 93.5             | 96.4              | 90.2         | 89.1     | 90.8 | 92.0     |
+| **HLIP-2025-10-08** | 93.5             | 96.4              | 90.2         | 89.1     | 90.8 | **92.0**     |
 
-We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the full RSNA dataset, demonstrating superior performance compared with the HLIP model in the original paper. Note that these experiments are conducted under the zero-shot setting.
+We evaluate this new model on Pub-Brain-5’s anomaly detection task and on the full RSNA dataset, demonstrating superior performance compared with the HLIP model in the original paper. **Note that these experiments are conducted under the zero-shot setting.**
 
 
 ## Supervised by LLM-summarized report
@@ -273,7 +275,7 @@ Here, we report a phenomenon observed when supervising with LLM-summarized repor
   </div>
 </div>
 
-However, we find that with sentence dropout, this issue can be largely alleviated.
+We find that with sentence dropout, this issue can be largely alleviated.
 
 
 ## Unsuccessful attempts
@@ -303,4 +305,4 @@ However, we find that with sentence dropout, this issue can be largely alleviate
 At the end of this blog, we introduce four designs that we find do not provide benefits in our setting.
 - For the patch embedding layer, while central-inflation initialization has been shown to perform better for video ViTs, we find that average-inflation initialization performs better in our setting.
 - We find that using smaller patch sizes along the x and y axes does not improve performance.
-- We implement a rotary position embedding following V-JEPA 2. However, we do not observe clear benefits. We hypothesize that rotary position embeddings may be more beneficial for larger models.
+- We implement a rotary position embedding following [V-JEPA 2](https://github.com/facebookresearch/vjepa2). However, we do not observe clear benefits. We hypothesize that rotary position embeddings may be more beneficial for larger models.
